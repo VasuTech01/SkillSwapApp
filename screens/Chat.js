@@ -22,7 +22,7 @@ const Chat = () => {
   }
   useLayoutEffect(() => {
     navigation.setOptions({
-     
+      headerShown:true,
       headerRight: () => {
         return (
           <TouchableOpacity style={{marginRight:10}} onPress={_signOut}>
@@ -75,7 +75,7 @@ const Chat = () => {
       user={
         {
           _id: auth?.currentUser?.email,
-          avatar: "https://i.pravatar.cc/300"
+          avatar: "https://i.pravatar.cc/400"
         }
       }
       messagesContainerStyle={{

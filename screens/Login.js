@@ -1,17 +1,24 @@
 import { View, Text, TextInput, Alert, TouchableOpacity, StatusBar, StyleSheet, Button, Image, SafeAreaView } from 'react-native'
-import React, { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from "../config/firebase";
+import React, { useState,useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
+// import { signInWithEmailAndPassword } from 'firebase/auth';
+// import { auth } from "../config/firebase";
 const backImage = require("../assets/backImage.png");
 
 
 const Login = ({navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
+    const {SignInUser} = useContext(AuthContext);
     const _handleLogin = () => {
         if (email !== '' && password !== "") {
-            signInWithEmailAndPassword(auth, email, password).then(r => console.log(r)).catch((err) => { Alert.alert("Error Login",err.message) });
+            SignInUser(email, password).then(r => {
+                if (!r.ok) {
+                    Alert.alert("Erorr", r.message);
+                    return;
+                }
+                console.log("res", r)
+            }).catch(e => Alert.alert("Erorr", e.message))
         }
     }
     return (
@@ -19,8 +26,9 @@ const Login = ({navigation }) => {
             <Image source={backImage} style={styles.backImage} />
             <View style={styles.whiteSheet}>
                 <SafeAreaView style={styles.form}>
-                    <Text style={styles.title}>Login</Text>
+                    <Text style={styles.title} >Login</Text>
                     <TextInput
+                       
                         style={styles.input}
                         placeholder="Enter Email"
                        autoFocus={true}
@@ -40,7 +48,6 @@ const Login = ({navigation }) => {
                         value={password}
                         onChangeText={(text)=>setPassword(text)}
                     />
-
                     <TouchableOpacity style={styles.button} onPress={_handleLogin}>
                         <Text style={{fontWeight:"bold",color:"#fff",fontSize:18}}>Login</Text>
                     </TouchableOpacity>

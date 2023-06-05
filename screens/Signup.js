@@ -1,17 +1,26 @@
 import { View, Text, TextInput, Alert, TouchableOpacity, StatusBar, StyleSheet, Button, Image, SafeAreaView } from 'react-native'
-import React, { useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from "../config/firebase";
+import React, { useState ,useContext} from 'react';
+// import { createUserWithEmailAndPassword } from 'firebase/auth';
+// import { auth } from "../config/firebase";
+import { AuthContext } from '../context/AuthContext';
 const backImage = require("../assets/backImage.png");
 
 
 const SignUp = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
+    const {SignUpUser} = useContext(AuthContext);
     const _handleSignup = () => {
         if (email !== '' && password !== "") {
-            createUserWithEmailAndPassword(auth, email, password).then(r => console.log("SignUp Success", r)).catch((err) => { Alert.alert("Error Login", err.message); console.log(err); });
+            SignUpUser(email, password).then(r => {
+               // console.log("SignUp Success", r)
+                if (!r.ok) {
+                    Alert.alert("Erorr", r.message);
+                    return;
+                }
+                console.log("res", r)
+            
+            }).catch((err) => { Alert.alert("Error Login", err.message); console.log(err); });
         }
     }
     return (
